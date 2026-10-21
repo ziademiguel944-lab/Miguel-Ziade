@@ -1,0 +1,591 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Miguel Ziade — Computer Graphics & Animation</title><meta name="description" content="Portfolio of Miguel Ziade: real-time environments, hard-surface characters, sculpted props, games, motion graphics and interfaces."></head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800;900&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style id="css">
+/* Layout: a render-viewport portfolio. Each project is framed like a 3D viewport shot,
+   with HUD corner labels and a key-light colour sampled from its own render. Dark by design.
+   Owners get an Edit mode that saves the page itself as a new version. */
+:root{
+  color-scheme: dark;
+  --bg:#0c0d11; --panel:#14161c; --line:#262933; --fg:#ecebe6; --soft:#c9c8c2; --muted:#8f929e;
+  --accent:#f0b450; --danger:#ef6a5b; --ok:#7fd49a;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --k:var(--accent);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:.92;letter-spacing:.005em}
+p{margin:0}
+.mono{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:22px;flex-wrap:wrap}
+.top .mark{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:.04em}
+.top nav{display:flex;gap:22px;flex-wrap:wrap}
+.top nav a{text-decoration:none;color:var(--muted)}
+.top nav a:hover{color:var(--fg)}
+
+.vp{position:relative;background:#000;overflow:hidden;border:1px solid var(--line)}
+.vp > img,.vp > video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+.vp.contain > img,.vp > video{object-fit:contain}
+.vp::before,.vp::after{content:"";position:absolute;width:18px;height:18px;border:1.5px solid var(--k);opacity:.9;pointer-events:none;z-index:3}
+.vp::before{top:10px;left:10px;border-right:0;border-bottom:0}
+.vp::after{bottom:10px;right:10px;border-left:0;border-top:0}
+.hud{position:absolute;z-index:3;color:rgba(236,235,230,.82);text-shadow:0 1px 2px rgba(0,0,0,.8);pointer-events:none}
+.hud.tl{top:12px;left:36px}.hud.tr{top:12px;right:14px;text-align:right}.hud.bl{bottom:12px;left:14px}
+.hud b{color:var(--k);font-weight:500}
+.editing .hud{pointer-events:auto}
+
+.hero{padding-block:8px 72px}
+.hero .vp{aspect-ratio:16/8;max-width:100%;--k:#e2513a}
+.hero .vp > img{animation:settle 2.4s cubic-bezier(.2,.7,.2,1) both;object-position:center 60%}
+@keyframes settle{from{transform:scale(1.07)}to{transform:scale(1)}}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,13,17,0) 35%,rgba(12,13,17,.92) 100%);z-index:1;pointer-events:none}
+.hero-text{position:absolute;z-index:2;left:clamp(16px,4vw,44px);right:clamp(16px,4vw,44px);bottom:clamp(18px,4vw,40px);display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+.hero h1{font-size:clamp(56px,11vw,150px);font-weight:900;text-transform:uppercase;line-height:.84;white-space:pre-line}
+.hero .role{font-family:var(--display);font-weight:500;font-size:clamp(20px,2.4vw,30px);color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+.hero .lede{max-width:34ch;color:#d6d4cd;font-size:15px}
+.stats{display:flex;gap:clamp(20px,5vw,56px);flex-wrap:wrap;margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
+.stats div{display:flex;flex-direction:column;gap:2px}
+.stats strong{font-family:var(--display);font-weight:800;font-size:34px;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{color:var(--muted)}
+
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:56px}
+.sec-head h2{font-size:clamp(40px,6vw,72px);font-weight:800;text-transform:uppercase}
+.sec-head .mono{color:var(--muted)}
+
+.work{padding-block:40px}
+.projects{display:flex;flex-direction:column;gap:96px}
+.proj{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start}
+.proj:nth-child(even) .media{order:2}
+.proj.textonly{grid-template-columns:minmax(0,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:40px;position:relative}
+.proj.textonly::before{content:"";position:absolute;left:0;top:-1px;width:64px;height:2px;background:var(--k)}
+.proj.textonly .info{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);column-gap:clamp(24px,4vw,56px);row-gap:18px;align-items:start;padding-top:0}
+.proj.textonly .info > .eyebrow{grid-column:1}
+.proj.textonly .info > h3{grid-column:1}
+.proj.textonly .info > p,.proj.textonly .info > .chips,.proj.textonly .info > .swatch{grid-column:2}
+.proj.textonly .info > p{grid-row:1 / span 2}
+.media{display:flex;flex-direction:column;gap:10px;min-width:0}
+.media .vp{aspect-ratio:16/10;max-width:100%}
+.media .vp.zoom{cursor:zoom-in}
+.thumbs{display:flex;gap:10px;flex-wrap:wrap}
+.thumbs button{appearance:none;border:1px solid var(--line);background:#000;padding:0;width:84px;aspect-ratio:16/10;cursor:pointer;overflow:hidden;opacity:.55;transition:opacity .2s,border-color .2s;position:relative;color:var(--fg)}
+.thumbs button img{width:100%;height:100%;object-fit:cover;display:block}
+.thumbs button:hover{opacity:.85}
+.thumbs button[aria-pressed="true"]{opacity:1;border-color:var(--k)}
+.thumbs .tv{display:grid;place-items:center;width:100%;height:100%;background:radial-gradient(ellipse at 50% 60%,#1b2a2c,#0a0b0e 75%)}
+.thumbs .tv::before{content:"";border-left:12px solid var(--k);border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
+.thumbs .tv.over{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.thumbs .slotmark{display:grid;place-items:center;width:100%;height:100%;border:1px dashed var(--muted);font-family:var(--mono);font-size:18px;color:var(--muted)}
+
+.info{display:flex;flex-direction:column;gap:18px;min-width:0;padding-top:6px}
+.info .eyebrow{color:var(--k);display:flex;gap:10px;flex-wrap:wrap}
+.info h3{font-size:clamp(38px,4.6vw,60px);font-weight:800;text-transform:uppercase}
+.info p{color:var(--soft);max-width:52ch;white-space:pre-line}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);padding:5px 9px;color:var(--muted)}
+.swatch{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.swatch i{width:12px;height:12px;background:var(--k);box-shadow:0 0 14px var(--k);display:inline-block;flex:none}
+
+.reel{display:grid;place-items:center;background:
+  repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.035) 46px 47px),
+  repeating-linear-gradient(0deg,transparent 0 46px,rgba(255,255,255,.035) 46px 47px),
+  radial-gradient(ellipse at 50% 60%,#1b2a2c 0%,#0a0b0e 70%)}
+.reel .center{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:16px;z-index:2}
+.play{width:74px;height:74px;border-radius:50%;border:1.5px solid var(--k);display:grid;place-items:center;box-shadow:0 0 30px color-mix(in srgb,var(--k) 40%,transparent);flex:none}
+.play::after{content:"";border-left:20px solid var(--k);border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:6px}
+.reel .center a{color:var(--fg);text-decoration:none;border:1px solid var(--k);padding:8px 14px}
+.reel .center a:hover{background:color-mix(in srgb,var(--k) 18%,transparent)}
+.reel .center .mono{color:var(--muted);overflow-wrap:anywhere}
+
+.tools{padding-block:110px 40px}
+.tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.tool-grid > div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px 22px 26px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.tool-grid h4{margin:0;font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.tool-grid ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.tool-grid li{font-family:var(--display);font-weight:500;font-size:26px;line-height:1.15;text-transform:uppercase;overflow-wrap:anywhere}
+
+footer{padding-block:90px 120px}
+footer .big{font-family:var(--display);font-weight:900;font-size:clamp(48px,9vw,120px);text-transform:uppercase;line-height:.86}
+footer .big em{font-style:normal;color:var(--accent)}
+.links{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:30px}
+.links a,.links span.l{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--fg);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:2px;overflow-wrap:anywhere}
+.links small{color:var(--muted);margin-right:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+footer .row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:32px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted)}
+
+dialog#lb{border:0;padding:0;background:transparent;max-width:min(96vw,1400px);max-height:92vh}
+dialog#lb::backdrop{background:rgba(5,6,8,.92)}
+dialog#lb img{display:block;max-width:100%;max-height:86vh;margin:0 auto}
+dialog#lb .cap{display:flex;justify-content:space-between;gap:12px;color:var(--muted);padding-top:10px}
+
+/* Buttons + edit mode */
+.btn{appearance:none;background:var(--panel);border:1px solid var(--line);color:var(--fg);padding:7px 12px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;line-height:1.2}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#16120a;font-weight:500}
+.btn.danger{color:var(--danger)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.editing [data-k]{outline:1px dashed rgba(240,180,80,.45);outline-offset:3px;cursor:text;min-width:1ch}
+.editing [data-k]:focus{outline:1.5px solid var(--accent);background:rgba(240,180,80,.06)}
+.editing [data-k]:empty::before{content:"Click to add text";color:var(--muted);opacity:.7}
+.etools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;border:1px dashed rgba(240,180,80,.35);background:rgba(240,180,80,.04)}
+.etools .lbl{color:var(--accent);margin-right:4px}
+.etools input[type=text],.etools input[type=url],.field{background:var(--bg);border:1px solid var(--line);color:var(--fg);font:13px var(--body);padding:7px 9px;min-width:0;flex:1 1 160px}
+.etools input[type=color]{width:34px;height:30px;padding:0;border:1px solid var(--line);background:none;cursor:pointer}
+.slotbox{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;z-index:2;background:rgba(10,11,14,.6)}
+.slotbox .mono{color:var(--soft);overflow-wrap:anywhere}
+.slotbox .row2{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:min(100%,460px)}
+.filebtn{position:relative;overflow:hidden;display:inline-flex;align-items:center}
+.filebtn input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.slotbox.drag{outline:2px dashed var(--accent);outline-offset:-10px;background:rgba(240,180,80,.08)}
+.hero-edit{position:absolute;z-index:4;top:44px;left:14px;display:flex;gap:8px;flex-wrap:wrap}
+.projbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.addproj{display:flex;justify-content:center;margin-top:64px}
+.linkrow{display:flex;gap:8px;flex-wrap:wrap;width:100%}
+
+#bar{position:fixed;z-index:20;right:0;bottom:0;left:0;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));padding-top:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;justify-content:flex-end;pointer-events:none}
+#bar .inner{pointer-events:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;background:rgba(20,22,28,.94);border:1px solid var(--line);padding:8px;backdrop-filter:blur(8px);max-width:100%}
+#bar .status{color:var(--muted);padding:0 6px}
+#bar .status.dirty{color:var(--accent)}
+#bar .status.err{color:var(--danger)}
+#bar .status.ok{color:var(--ok)}
+
+@media (max-width:860px){
+  .proj{grid-template-columns:minmax(0,1fr)}
+  .proj:nth-child(even) .media{order:0}
+  .proj.textonly .info{grid-template-columns:minmax(0,1fr)}
+  .proj.textonly .info > *{grid-column:1 !important;grid-row:auto !important}
+  .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hero .vp{aspect-ratio:4/5}
+  .projects{gap:72px}
+}
+@media (max-width:440px){
+  .tool-grid{grid-template-columns:minmax(0,1fr)}
+  .top nav{gap:14px}
+  .hud.tr{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero .vp > img{animation:none}
+  *{transition:none!important}
+}
+</style>
+
+<div id="app"></div>
+<div id="bar" hidden><div class="inner" id="barInner"></div></div>
+<dialog id="lb" aria-label="Image viewer">
+  <img id="lb-img" src="" alt="">
+  <div class="cap mono"><span id="lb-cap"></span><button class="btn" id="lb-close" type="button">Close</button></div>
+</dialog>
+<input type="file" id="filePick" hidden>
+
+<script type="application/json" id="state">{"brand": "MZ", "name": "Miguel\nZiade", "role": "Computer Graphics & Animation", "lede": "I build worlds and the things that live in them: real-time environments, hard-surface characters, sculpted props, games and interfaces.", "hero": {"img": "media/pier-at-dusk-pier-at-dusk.jpg", "hudL": "Persp · Lit · Cinematic", "hudR": "Unreal Engine · Pier at Dusk"}, "workTitle": "Selected Work", "workSub": "Environments · Characters · Props · Games · UI", "projects": [{"id": "pier", "title": "Pier at Dusk", "cat": "Environment", "tool": "Unreal Engine", "color": "#e2513a", "swatch": "Key light · crimson", "hudL": "Persp · Lit", "hudB": "Volumetric fog · Particles", "fit": "cover", "desc": "A cinematic environment: a weathered wooden pier crosses still, dark water toward a towering mountain fortress. Dramatic red lighting, drifting particles and a moody twilight sky build a sense of mystery and isolation, pulling the viewer into an ancient and dangerous world.", "tags": "Level art, Lighting, Atmosphere, Composition", "media": [{"t": "img", "src": "media/pier-at-dusk-pier-at-dusk.jpg", "label": "Pier at dusk"}]}, {"id": "egypt", "title": "Desert Sanctum", "cat": "Environment", "tool": "CSC278", "color": "#f0b450", "swatch": "Key light · torch gold", "hudL": "Persp · Rendered", "hudB": "CSC278 · Project 3", "fit": "cover", "desc": "A stylized 3D environment inspired by ancient Egyptian architecture and symbolism. A central pyramid sits among palm trees, ceremonial objects and stone structures arranged around an illuminated altar, all on a floating island of sand and rock.", "tags": "Environment modeling, Lighting, Atmospheric composition", "media": [{"t": "img", "src": "media/desert-sanctum-three-quarter-view.jpg", "label": "Three-quarter view"}, {"t": "img", "src": "media/desert-sanctum-floating-island.jpg", "label": "Floating island"}, {"t": "img", "src": "media/desert-sanctum-altar-close-up.jpg", "label": "Altar close-up"}, {"t": "video", "src": "media/desert-sanctum-turntable.mp4", "poster": "media/desert-sanctum-turntable-poster.jpg", "label": "Turntable"}]}, {"id": "robot", "title": "Appliance Bot", "cat": "Character", "tool": "3ds Max + Substance Painter", "color": "#c9734a", "swatch": "Base colour · oxidised iron", "hudL": "Persp · Textured", "hudB": "PBR · Rust & wear", "fit": "cover", "desc": "A stylized robot made by combining mechanical parts with household appliance elements: oven-door belly, dial buttons, stovepipe head. Modeled in 3ds Max and textured in Substance Painter, with worn metal materials and rust effects for a weathered industrial look.", "tags": "Hard-surface modeling, Texturing, Material wear", "media": [{"t": "img", "src": "media/appliance-bot-top-view.jpg", "label": "Top view"}, {"t": "img", "src": "media/appliance-bot-full-body.jpg", "label": "Full body"}, {"t": "img", "src": "media/appliance-bot-texture-close-up.jpg", "label": "Texture close-up"}]}, {"id": "goggles", "title": "Winged Goggles", "cat": "Prop sculpt", "tool": "ZBrush", "color": "#b9c0cc", "swatch": "Preview · clay grey", "hudL": "Sculpt · MatCap", "hudB": "Symmetry · X", "fit": "cover", "desc": "A futuristic character accessory sculpted in ZBrush. Gears and mechanical linkages connect the lenses to feathered wings, built through detailed sculpting and symmetrical design.", "tags": "Digital sculpting, Mechanical detail, Symmetry", "media": [{"t": "img", "src": "media/winged-goggles-three-quarter-left.jpg", "label": "Three-quarter left"}, {"t": "img", "src": "media/winged-goggles-three-quarter-right.jpg", "label": "Three-quarter right"}, {"t": "img", "src": "media/winged-goggles-front-view.jpg", "label": "Front view"}]}, {"id": "comps", "title": "Night Composites", "cat": "2D compositing", "tool": "Photoshop", "color": "#5fe0c0", "swatch": "Grade · moonlit teal", "hudL": "Composite · Graded", "hudB": "Masking · Blend modes", "fit": "contain", "desc": "A series of surreal photo compositions built with masking, colour grading and compositing in Adobe Photoshop: a stag with luminous antlers under a crescent moon, and a portrait blended into a full moon and starfield.", "tags": "Masking, Colour grading, Photo compositing", "media": [{"t": "img", "src": "media/night-composites-glowing-stag.jpg", "label": "Glowing stag"}, {"t": "img", "src": "media/night-composites-moon-portrait.jpg", "label": "Moon portrait"}]}, {"id": "unity", "title": "Unity Games", "cat": "Games", "tool": "Unity", "color": "#7ad1d9", "swatch": "Engine · Unity 2D + 3D", "hudL": "Play mode · Unity", "hudB": "2D + 3D gameplay", "fit": "contain", "desc": "A collection of 2D and 3D games developed in Unity, with interactive gameplay, custom environments, character mechanics, animation and engaging visual design.", "tags": "Gameplay, Character mechanics, Animation, Level design", "media": [{"t": "video", "src": "media/unity-games-games-reel.mp4", "poster": "media/unity-games-games-reel-poster.jpg", "label": "Games reel"}]}, {"id": "muse", "title": "MuseStream", "cat": "Interface", "tool": "XAML + C#", "color": "#e04fd8", "swatch": "Theme · neon magenta", "hudL": "UI · XAML", "hudB": "Desktop app", "fit": "contain", "desc": "A desktop music streaming interface built with XAML and C#. It covers playlist management, song search and playback controls inside a neon, synthwave-themed UI.", "tags": "UI design, C#, Playlists, Search, Playback", "media": [{"t": "img", "src": "media/musestream-home.jpg", "label": "Home"}, {"t": "img", "src": "media/musestream-search.jpg", "label": "Search"}, {"t": "img", "src": "media/musestream-all-songs.jpg", "label": "All songs"}, {"t": "img", "src": "media/musestream-library.jpg", "label": "Library"}, {"t": "img", "src": "media/musestream-playlist.jpg", "label": "Playlist"}]}, {"id": "p7dqze1s", "title": "Audi R8 Spec Ad", "cat": "Particles & Animation", "tool": "3ds Max + tyFlow", "desc": "A 35-second car commercial for the Audi R8, built in 3ds Max with particle effects in tyFlow. The car cruises down a lit night highway, then rolls onto a glowing turntable where streams of particles sweep around it, the body shimmers, and its wheels and suspension fly in to assemble the car before it drives off to the closing tagline.", "tags": "tyFlow particles, Animation, Camera work, Lighting, Product shot", "color": "#e8343f", "swatch": "Key light · racing red", "hudL": "Render · 25 fps", "hudB": "tyFlow · Particles", "fit": "contain", "media": [{"t": "video", "src": "media/audi-r8-spec-ad-car-ad.mp4", "poster": "media/audi-r8-spec-ad-car-ad-poster.jpg", "label": "Car ad"}]}, {"id": "lyric", "title": "Lyric Video", "cat": "Motion graphics", "tool": "After Effects", "desc": "An 81-second lyric video animated in Adobe After Effects. The words are set in a rough hand-drawn typeface and timed to the vocals, appearing over dark red grunge textures and falling rain. Animated knives drop in alongside the lyrics, and the piece cuts between smoky backdrops, sweeping red light streaks and a neon red-and-blue tunnel sequence.", "tags": "Kinetic typography, Audio sync, Motion graphics, Compositing", "color": "#4fa8ff", "swatch": "Accent · neon blue", "hudL": "Comp · 24 fps", "hudB": "Kinetic type", "fit": "contain", "media": [{"t": "video", "src": "media/lyric-video-lyric-video.mp4", "poster": "media/lyric-video-lyric-video-poster.jpg", "label": "Lyric video"}]}], "toolsTitle": "Toolkit", "toolsSub": "Software used across this work", "tools": [{"g": "Real-time", "items": "Unreal Engine, Unity"}, {"g": "Modeling & sculpt", "items": "3ds Max, Autodesk Maya, ZBrush"}, {"g": "Texture, image & motion", "items": "Substance Painter, Photoshop, After Effects"}, {"g": "Code", "items": "C#, XAML"}], "ctaA": "Let's build a", "ctaB": "world.", "links": [], "footL": "Miguel Ziade · Computer Graphics & Animation", "footR": "Open to internships & collaborations"}</script>
+<script id="main">
+(function(){
+var S = JSON.parse(document.getElementById('state').textContent);
+var ORIGINAL = document.getElementById('state').textContent;
+var editing = false, dirty = false, canWrite = false, assetsApi = null, artifactApi = null, saving = false;
+var sel = {};          /* selected media index per project id (view-only state) */
+var statusMsg = '', statusCls = '';
+
+function esc(s){return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function uid(){return 'p' + Math.random().toString(36).slice(2,9)}
+function getPath(k){return k.split('.').reduce(function(o,p){return o == null ? o : o[p]}, S)}
+function setPath(k,v){var ps=k.split('.'),o=S;for(var i=0;i<ps.length-1;i++)o=o[ps[i]];o[ps[ps.length-1]]=v}
+function tags(s){return String(s||'').split(',').map(function(x){return x.trim()}).filter(Boolean)}
+function host(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return 'link'}}
+function siteName(u){var h=host(u);if(/youtu/.test(h))return 'YouTube';if(/vimeo/.test(h))return 'Vimeo';if(/drive\.google/.test(h))return 'Google Drive';if(/artstation/.test(h))return 'ArtStation';return h}
+
+/* Editable text helper: plain text in view mode, contenteditable in edit mode */
+function T(tag,k,cls,extra){
+  var v = getPath(k);
+  var a = editing ? ' contenteditable="plaintext-only" spellcheck="true" data-k="'+esc(k)+'"' : '';
+  return '<'+tag+(cls?' class="'+cls+'"':'')+(extra||'')+a+'>'+esc(v)+'</'+tag+'>';
+}
+
+function visibleMedia(p){
+  return editing ? p.media : p.media.filter(function(m){return m.t !== 'slot'});
+}
+
+function mediaView(p, m, i){
+  var hudL = T('div','projects.'+i+'.hudL','hud tl mono');
+  var hudB = T('div','projects.'+i+'.hudB','hud bl mono');
+  if(!m){
+    if(!editing) return '';
+    return '<div class="vp reel"><div class="center"><span class="mono">No images yet · use + Image below to add one</span></div></div>';
+  }
+  if(m.t==='img') return '<div class="vp zoom'+(p.fit==='contain'?' contain':'')+'" data-zoom="'+i+'"><img src="'+esc(m.src)+'" alt="'+esc(m.label||p.title)+'">'+hudL+hudB+'</div>';
+  if(m.t==='video' && m.parts){
+    var c = vidCache[m.parts.join('|')];
+    if(c && c.url) return '<div class="vp"><video src="'+esc(c.url)+'" controls playsinline aria-label="'+esc(m.label||p.title)+'"></video>'+hudL+'</div>';
+    var mb = m.size ? Math.round(m.size/1048576)+' MB' : '';
+    var msg = c && c.err ? 'Could not load the video. Press play to try again.' : (c && c.loading ? 'Loading '+(c.pct||0)+'%' : (m.label||'Video')+(mb?' · '+mb:''));
+    return '<div class="vp reel">'+hudL+hudB+'<div class="center">'+
+      '<button type="button" class="play" data-act="loadVid" data-p="'+i+'" aria-label="Play '+esc(m.label||'video')+'" style="background:none;cursor:pointer" '+(c&&c.loading?'disabled':'')+'></button>'+
+      '<span class="mono" id="vl-'+esc(p.id)+'">'+esc(msg)+'</span></div></div>';
+  }
+  if(m.t==='video') return '<div class="vp"><video src="'+esc(m.src)+'"'+(m.poster?' poster="'+esc(m.poster)+'"':'')+' controls playsinline preload="metadata" aria-label="'+esc(m.label||p.title)+'"></video>'+hudL+'</div>';
+  if(m.t==='link' && editing) return '<div class="vp reel">'+hudL+'<div class="slotbox">'+
+    '<span class="mono">Video link · '+esc(m.label||'Video')+'</span>'+
+    '<div class="row2"><input class="field" type="url" id="sl-'+esc(p.id)+'" value="'+esc(m.href)+'" aria-label="Video link"><button class="btn primary" data-act="linkSlot" data-p="'+i+'">Update link</button></div>'+
+    '<div class="row2"><a class="btn" href="'+esc(m.href)+'" target="_blank" rel="noopener" style="text-decoration:none">Test link ↗</a><button class="btn danger" data-act="clearLink" data-p="'+i+'">Clear link</button></div>'+
+  '</div></div>';
+  if(m.t==='link') return '<div class="vp reel">'+hudL+hudB+'<div class="center"><div class="play" aria-hidden="true"></div><a href="'+esc(m.href)+'" target="_blank" rel="noopener" class="mono">Watch on '+esc(siteName(m.href))+'</a><span class="mono">'+esc(m.label||'')+'</span></div></div>';
+  /* empty slot, edit mode */
+  return '<div class="vp reel">'+hudL+'<div class="slotbox">'+
+    '<span class="mono">Video slot · '+esc(m.label||'Untitled')+'</span>'+
+    '<div class="row2"><input class="field" type="url" id="sl-'+esc(p.id)+'" placeholder="Paste a YouTube, Vimeo or Google Drive link" aria-label="Video link"><button class="btn primary" data-act="linkSlot" data-p="'+i+'">Add link</button></div>'+
+    '<span class="mono" style="color:var(--muted);font-size:10.5px">Set YouTube videos to Unlisted · Drive files to “Anyone with the link”</span>'+
+  '</div></div>';
+}
+
+function thumbsView(p, list, cur, i){
+  if(list.length < 2 && !editing) return '';
+  return '<div class="thumbs">'+list.map(function(m,j){
+    var inner = m.t==='img' ? '<img src="'+esc(m.src)+'" alt="">' : (m.t==='slot' ? '<span class="slotmark">+</span>' : (m.poster ? '<img src="'+esc(m.poster)+'" alt=""><span class="tv over"></span>' : '<span class="tv"></span>'));
+    var lab = m.label || (m.t==='img'?'Image':m.t==='slot'?'Empty video slot':'Video');
+    return '<button type="button" aria-pressed="'+(j===cur)+'" data-act="pick" data-p="'+i+'" data-m="'+j+'" aria-label="'+esc(lab)+'" title="'+esc(lab)+'">'+inner+'</button>';
+  }).join('')+'</div>';
+}
+
+function projEditTools(p, i, list, cur){
+  if(!editing) return '';
+  var m = list[cur];
+  var html = '<div class="etools">'+
+    '<span class="mono lbl">Media</span>'+
+    (assetsApi ? fileBtn('+ Image','img',i,'image/png,image/jpeg,image/gif,image/webp') : '')+
+    '<button class="btn" data-act="fit" data-p="'+i+'">Fit: '+(p.fit==='contain'?'whole image':'fill frame')+'</button>';
+  if(m){
+    html += '<button class="btn" data-act="mvMedia" data-d="-1" data-p="'+i+'" '+(cur===0?'disabled':'')+'>◀ Move</button>'+
+      '<button class="btn" data-act="mvMedia" data-d="1" data-p="'+i+'" '+(cur===list.length-1?'disabled':'')+'>Move ▶</button>'+
+      '<button class="btn danger" data-act="rmMedia" data-p="'+i+'">Remove selected</button>';
+  }
+  if(m) html += '<div class="linkrow"><span class="mono lbl" style="align-self:center">Selected name</span><input type="text" data-mk="'+i+'.'+cur+'" value="'+esc(m.label||'')+'" placeholder="e.g. Turntable, Gameplay reel"></div>';
+  return html+'</div>';
+}
+
+function projView(p, i){
+  var list = visibleMedia(p);
+  var cur = Math.min(sel[p.id]||0, Math.max(0,list.length-1));
+  var m = list[cur];
+  var bar = editing ? '<div class="projbar">'+
+      '<button class="btn" data-act="mvProj" data-d="-1" data-p="'+i+'" '+(i===0?'disabled':'')+'>▲ Move up</button>'+
+      '<button class="btn" data-act="mvProj" data-d="1" data-p="'+i+'" '+(i===S.projects.length-1?'disabled':'')+'>▼ Move down</button>'+
+      '<label class="btn" style="display:inline-flex;gap:8px;align-items:center">Key colour <input type="color" data-color="'+i+'" value="'+esc(p.color)+'"></label>'+
+      '<button class="btn danger" data-act="rmProj" data-p="'+i+'">Delete project</button></div>' : '';
+  var chips = editing
+    ? '<div class="chips"><span data-k="projects.'+i+'.tags" contenteditable="plaintext-only" style="text-transform:none" title="Comma-separated tags">'+esc(p.tags)+'</span></div>'
+    : '<div class="chips">'+tags(p.tags).map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>';
+  var textOnly = !editing && !list.length;
+  return '<article class="proj'+(textOnly?' textonly':'')+'" style="--k:'+esc(p.color)+'" id="'+esc(p.id)+'">'+
+    (textOnly ? '' : '<div class="media">'+bar+mediaView(p, m, i)+thumbsView(p, list, cur, i)+projEditTools(p, i, list, cur)+'</div>')+
+    '<div class="info">'+
+      '<div class="eyebrow mono">'+T('span','projects.'+i+'.cat')+'<span>/</span>'+T('span','projects.'+i+'.tool')+'</div>'+
+      T('h3','projects.'+i+'.title')+
+      T('p','projects.'+i+'.desc')+
+      chips+
+      '<div class="swatch mono"><i></i>'+T('span','projects.'+i+'.swatch')+'</div>'+
+    '</div></article>';
+}
+
+function countVideos(){var n=0;S.projects.forEach(function(p){p.media.forEach(function(m){if(m.t==='video'||m.t==='link')n++})});return n}
+function countTools(){return S.tools.reduce(function(a,g){return a+tags(g.items).length},0)}
+
+function linksView(){
+  if(editing){
+    return '<div class="etools" style="margin-top:30px"><span class="mono lbl">Contact links</span>'+
+      S.links.map(function(l,j){return '<div class="linkrow"><input type="text" data-lk="'+j+'.label" value="'+esc(l.label)+'" placeholder="Label (Email, ArtStation…)" style="flex:0 1 180px"><input type="text" data-lk="'+j+'.href" value="'+esc(l.href)+'" placeholder="https://… or email address"><button class="btn danger" data-act="rmLink" data-j="'+j+'">Remove</button></div>'}).join('')+
+      '<button class="btn" data-act="addContact">+ Add link</button></div>';
+  }
+  if(!S.links.length) return '';
+  return '<div class="links">'+S.links.map(function(l){
+    var h = String(l.href||'').trim();
+    if(/^https?:\/\//i.test(h)) return '<span><small>'+esc(l.label)+'</small><a href="'+esc(h)+'" target="_blank" rel="noopener">'+esc(h.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))+'</a></span>';
+    return '<span><small>'+esc(l.label)+'</small><span class="l">'+esc(h)+'</span></span>';
+  }).join('')+'</div>';
+}
+
+function render(){
+  var app = document.getElementById('app');
+  app.className = editing ? 'editing' : '';
+  var heroImg = S.hero.img ? '<img src="'+esc(S.hero.img)+'" alt="Hero render">' : '';
+  var heroEdit = (editing && assetsApi) ? '<div class="hero-edit">'+fileBtn('Replace hero image','hero',-1,'image/png,image/jpeg,image/gif,image/webp')+'</div>' : '';
+  app.innerHTML =
+  '<header class="wrap top">'+T('div','brand','mark')+
+    '<nav class="mono" aria-label="Sections"><a href="#work">Work</a><a href="#tools">Toolkit</a><a href="#contact">Contact</a></nav></header>'+
+  '<section class="wrap hero"><div class="vp">'+heroImg+'<div class="shade"></div>'+heroEdit+
+    T('div','hero.hudL','hud tl mono')+T('div','hero.hudR','hud tr mono')+
+    '<div class="hero-text"><div>'+T('h1','name')+T('div','role','role')+'</div>'+T('p','lede','lede')+'</div></div>'+
+    '<div class="stats">'+
+      '<div><strong>'+S.projects.length+'</strong><span class="mono">Projects</span></div>'+
+      '<div><strong>'+countTools()+'</strong><span class="mono">Tools</span></div>'+
+      (countVideos()?'<div><strong>'+countVideos()+'</strong><span class="mono">Videos</span></div>':'')+
+      '<div><strong>2D + 3D</strong><span class="mono">Pipeline</span></div>'+
+    '</div></section>'+
+  '<section class="wrap work" id="work"><div class="sec-head">'+T('h2','workTitle')+T('span','workSub','mono')+'</div>'+
+    '<div class="projects">'+S.projects.map(projView).join('')+'</div>'+
+    (editing?'<div class="addproj"><button class="btn primary" data-act="addProj">+ Add project</button></div>':'')+
+  '</section>'+
+  '<section class="wrap tools" id="tools"><div class="sec-head">'+T('h2','toolsTitle')+T('span','toolsSub','mono')+'</div>'+
+    '<div class="tool-grid">'+S.tools.map(function(g,j){
+      var items = editing ? '<ul><li data-k="tools.'+j+'.items" contenteditable="plaintext-only" style="font-size:18px" title="Comma-separated">'+esc(g.items)+'</li></ul>'
+        : '<ul>'+tags(g.items).map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul>';
+      return '<div>'+T('h4','tools.'+j+'.g')+items+'</div>';
+    }).join('')+'</div></section>'+
+  '<footer class="wrap" id="contact"><div class="big">'+T('span','ctaA')+'<br>'+T('em','ctaB')+'</div>'+linksView()+
+    '<div class="row mono">'+T('span','footL')+T('span','footR')+'</div></footer>';
+  renderBar();
+}
+
+function renderBar(){
+  var bar = document.getElementById('bar'), inner = document.getElementById('barInner');
+  if(!canWrite){ bar.hidden = true; return; }
+  bar.hidden = false;
+  var st = statusMsg ? '<span class="mono status '+statusCls+'">'+esc(statusMsg)+'</span>' : (dirty ? '<span class="mono status dirty">Unsaved changes</span>' : '');
+  if(!editing){
+    inner.innerHTML = st + '<button class="btn primary" data-act="edit">Edit portfolio</button>';
+  } else {
+    inner.innerHTML = st +
+      '<button class="btn" data-act="done">Preview</button>'+
+      (dirty?'<button class="btn" data-act="discard">Discard</button>':'')+
+      '<button class="btn primary" data-act="save" '+((!dirty||saving)?'disabled':'')+'>'+(saving?'Saving…':'Save')+'</button>';
+  }
+}
+
+function markDirty(){ if(!dirty){ dirty = true; statusMsg=''; renderBar(); } }
+function setStatus(msg, cls){ statusMsg = msg; statusCls = cls||''; renderBar(); }
+
+/* Text edits: update state without re-rendering, so the caret stays put */
+document.addEventListener('input', function(e){
+  var t = e.target;
+  if(t.dataset && t.dataset.k){ setPath(t.dataset.k, t.innerText.replace(/\n+$/,'')); markDirty(); return; }
+  if(t.dataset && t.dataset.lk){ var a=t.dataset.lk.split('.'); S.links[+a[0]][a[1]] = t.value; markDirty(); return; }
+  if(t.dataset && t.dataset.mk){ var b=t.dataset.mk.split('.'); var p=S.projects[+b[0]]; var lst=visibleMedia(p); if(lst[+b[1]]) lst[+b[1]].label = t.value; markDirty(); return; }
+  if(t.dataset && t.dataset.color != null){ var pr = S.projects[+t.dataset.color]; pr.color = t.value; var art = document.getElementById(pr.id); if(art) art.style.setProperty('--k', t.value); markDirty(); }
+});
+document.addEventListener('keydown', function(e){
+  var t = e.target;
+  if(t.dataset && t.dataset.k && e.key === 'Enter' && !/\.desc$|^lede$|^name$/.test(t.dataset.k)){ e.preventDefault(); t.blur(); }
+});
+
+/* File picking */
+var pickCb = null;
+document.getElementById('filePick').addEventListener('change', function(){
+  var f = this.files && this.files[0]; this.value = '';
+  if(f && pickCb){ var cb = pickCb; pickCb = null; cb(f); }
+});
+function pick(accept, cb){
+  if(!assetsApi){ setStatus('Uploads are not available in this view. Use a video link instead.', 'err'); return; }
+  var inp = document.getElementById('filePick'); inp.accept = accept; pickCb = cb; inp.click();
+}
+function uploadErr(err){
+  var c = err && err.code;
+  var m = c==='too_large' ? 'A file part was too large.' : c==='unsupported_type' ? 'That file type is not supported.' : c==='quota_or_state' ? 'Storage for this page is full (1 GB). Remove some videos first.' : c==='rate_limited' ? 'Uploading too fast. Wait a moment and try again.' : (c==='not_granted'||c==='capability_disabled') ? 'Uploading is not available in this view. Open the page in a web browser at claude.ai.' : 'Upload failed. Try again in a moment.';
+  return m + (c ? ' (error: '+c+')' : (err && err.message ? ' ('+String(err.message).slice(0,80)+')' : ''));
+}
+/* Videos over the 20 MB per-file limit are split into ~19 MB parts and reassembled on play */
+var PART = 19*1024*1024, MAXVIDEO = 450*1024*1024;
+function safeBoundary(file, pos){
+  /* nudge a cut point so a part never begins with whitespace followed by "<" (the store rejects markup-looking parts) */
+  return file.slice(pos, Math.min(file.size, pos+64)).arrayBuffer().then(function(buf){
+    var b = new Uint8Array(buf), k = 0;
+    while(k < b.length && (b[k]===32||b[k]===9||b[k]===10||b[k]===13||b[k]===12)) k++;
+    if(k < b.length && b[k]===60) return pos + k + 1;
+    return k > 0 ? pos + k : pos;
+  });
+}
+function uploadVideo(file, cb){
+  var type = file.type;
+  if(!/^video\/(mp4|webm)$/.test(type)){ if(/\.mp4$/i.test(file.name)) type='video/mp4'; else if(/\.webm$/i.test(file.name)) type='video/webm'; else { setStatus('Use an MP4 or WebM video file.', 'err'); return; } }
+  if(file.size > MAXVIDEO){ setStatus('That video is over 450 MB. Export a smaller version or use a YouTube/Vimeo link.', 'err'); return; }
+  var name = file.name.replace(/\.[^.]+$/,'');
+  if(file.size <= 20*1024*1024){
+    setStatus('Uploading '+file.name+'…', '');
+    assetsApi.upload(file, {type:type}).then(function(r){ setStatus('Uploaded. Remember to save.', 'ok'); cb({src:'/_blob/'+r.id}, name); })
+      .catch(function(err){ setStatus(uploadErr(err), 'err'); });
+    return;
+  }
+  var ids = [], total = Math.ceil(file.size/PART);
+  function fail(err){
+    ids.forEach(function(id){ assetsApi.delete(id).catch(function(){}); });
+    setStatus(uploadErr(err), 'err');
+  }
+  function next(pos){
+    if(pos >= file.size){ setStatus('Uploaded '+file.name+' in '+ids.length+' parts. Remember to save.', 'ok');
+      cb({parts: ids.map(function(id){return '/_blob/'+id}), type:type, size:file.size}, name); return; }
+    var end = Math.min(file.size, pos + PART);
+    var go = end >= file.size ? Promise.resolve(end) : safeBoundary(file, end);
+    go.then(function(cut){
+      setStatus('Uploading '+file.name+': part '+(ids.length+1)+' of ~'+total+' ('+Math.round(pos/file.size*100)+'%)…', '');
+      return assetsApi.upload(file.slice(pos, cut, type), {type:type}).then(function(r){ ids.push(r.id); next(cut); });
+    }).catch(fail);
+  }
+  next(0);
+}
+function upload(file, kind, cb){
+  if(kind==='video'){ uploadVideo(file, function(v, name){ cb(v, name); }); return; }
+  var max = 20*1024*1024;
+  if(file.size > max){ setStatus('That image is over 20 MB. Export a smaller version.', 'err'); return; }
+  var type = file.type;
+  if(kind==='img' && !/^image\/(png|jpeg|gif|webp)$/.test(type)){ setStatus('Use a PNG, JPG, GIF or WebP image.', 'err'); return; }
+  setStatus('Uploading '+file.name+'…', '');
+  assetsApi.upload(file, {type:type}).then(function(r){
+    setStatus('Uploaded. Remember to save.', 'ok');
+    cb('/_blob/' + r.id, file.name.replace(/\.[^.]+$/,''));
+  }).catch(function(err){
+    setStatus(uploadErr(err), 'err');
+  });
+}
+function validUrl(u){ return /^https?:\/\/\S+\.\S+/i.test(u) }
+
+/* File buttons: the visible button IS the file input, so the picker opens natively in every view */
+var busy = false;
+function fileBtn(label, kind, i, accept, cls){
+  return '<label class="btn filebtn '+(cls||'')+'">'+esc(label)+'<input type="file" accept="'+esc(accept)+'" data-up="'+kind+'" data-p="'+i+'" aria-label="'+esc(label)+'"></label>';
+}
+function handleFile(kind, i, f){
+  if(!f) return;
+  if(busy){ setStatus('Wait for the current upload to finish.', 'err'); return; }
+  if(!assetsApi){ setStatus('Uploading is not available in this view. Open the page in a web browser at claude.ai.', 'err'); return; }
+  var p = i >= 0 ? S.projects[i] : null;
+  var isVid = /^video\//.test(f.type) || /\.(mp4|webm)$/i.test(f.name);
+  if(kind === 'slot' && !isVid){ setStatus('That is not a video. Use an MP4 or WebM file.', 'err'); return; }
+  busy = true;
+  var done = function(){ busy = false; };
+  if(kind === 'hero'){ upload(f,'img',function(src){ done(); S.hero.img = src; markDirty(); render(); }); }
+  else if(kind === 'img'){ upload(f,'img',function(src,name){ done(); p.media.push({t:'img',src:src,label:name}); sel[p.id]=visibleMedia(p).length-1; markDirty(); render(); }); }
+  else if(kind === 'vid'){ upload(f,'video',function(v,name){ done(); var m={t:'video',label:name}; for(var k in v) m[k]=v[k]; p.media.push(m); sel[p.id]=visibleMedia(p).length-1; markDirty(); render(); }); }
+  else if(kind === 'slot'){
+    var list = visibleMedia(p), m = list[Math.min(sel[p.id]||0, Math.max(0,list.length-1))];
+    if(!m || m.t !== 'slot'){ busy = false; return; }
+    upload(f,'video',function(v,name){ done(); m.t='video'; for(var k in v) m[k]=v[k]; if(!m.label) m.label=name; markDirty(); render(); });
+  }
+  /* release the lock if an upload failed (status shows the error) */
+  var watch = setInterval(function(){ if(statusCls === 'err'){ busy = false; clearInterval(watch); } else if(!busy){ clearInterval(watch); } }, 500);
+}
+document.addEventListener('change', function(e){
+  var t = e.target;
+  if(t && t.dataset && t.dataset.up){ var f = t.files && t.files[0]; var kind = t.dataset.up, i = +t.dataset.p; t.value = ''; handleFile(kind, i, f); }
+});
+document.addEventListener('dragover', function(e){ var z = e.target.closest && e.target.closest('[data-drop]'); if(z){ e.preventDefault(); z.classList.add('drag'); } });
+document.addEventListener('dragleave', function(e){ var z = e.target.closest && e.target.closest('[data-drop]'); if(z) z.classList.remove('drag'); });
+document.addEventListener('drop', function(e){
+  var z = e.target.closest && e.target.closest('[data-drop]');
+  if(!z) return;
+  e.preventDefault(); z.classList.remove('drag');
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  handleFile('slot', +z.dataset.drop, f);
+});
+
+/* Reassemble a multi-part video in the viewer's browser, then play it */
+var vidCache = {};
+function loadParts(p, m){
+  if(!m || !m.parts) return;
+  var key = m.parts.join('|'), c = vidCache[key];
+  if(c && (c.loading || c.url)) return;
+  c = vidCache[key] = {loading:true, pct:0};
+  render();
+  var bufs = [], got = 0, total = m.size || 0;
+  function show(){ var el = document.getElementById('vl-'+p.id); if(el) el.textContent = 'Loading '+c.pct+'%'; }
+  m.parts.reduce(function(chain, url, n){
+    return chain.then(function(){
+      return fetch(url).then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.arrayBuffer(); }).then(function(b){
+        bufs.push(b); got += b.byteLength;
+        c.pct = total ? Math.min(99, Math.round(got/total*100)) : Math.round((n+1)/m.parts.length*100); show();
+      });
+    });
+  }, Promise.resolve()).then(function(){
+    c.url = URL.createObjectURL(new Blob(bufs, {type: m.type || 'video/mp4'})); c.loading = false;
+    render();
+    var art = document.getElementById(p.id), v = art && art.querySelector('video');
+    if(v){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
+  }).catch(function(){ vidCache[key] = {err:true}; render(); });
+}
+
+/* Actions */
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-act]');
+  if(!b){
+    var z = e.target.closest('[data-zoom]');
+    if(z && !editing){ var img = z.querySelector('img'); var lb = document.getElementById('lb');
+      document.getElementById('lb-img').src = img.src; document.getElementById('lb-img').alt = img.alt;
+      document.getElementById('lb-cap').textContent = S.projects[+z.dataset.zoom].title;
+      try{ lb.showModal(); }catch(err){} }
+    return;
+  }
+  var act = b.dataset.act, i = b.dataset.p != null ? +b.dataset.p : -1, p = i >= 0 ? S.projects[i] : null;
+  var list = p ? visibleMedia(p) : null, cur = p ? Math.min(sel[p.id]||0, Math.max(0,list.length-1)) : 0;
+  switch(act){
+    case 'edit': editing = true; statusMsg=''; render(); break;
+    case 'done': editing = false; render(); break;
+    case 'discard': S = JSON.parse(ORIGINAL); dirty = false; statusMsg=''; render(); break;
+    case 'save': save(); break;
+    case 'pick': sel[p.id] = +b.dataset.m; render(); break;
+    case 'heroImg': pick('image/*', function(f){ upload(f,'img',function(src){ S.hero.img = src; markDirty(); render(); }); }); break;
+    case 'addImg': pick('image/*', function(f){ upload(f,'img',function(src,name){ p.media.push({t:'img',src:src,label:name}); sel[p.id]=visibleMedia(p).length-1; markDirty(); render(); }); }); break;
+    case 'addVid': pick('video/mp4,video/webm', function(f){ upload(f,'video',function(v,name){ var m={t:'video',label:name}; for(var k in v) m[k]=v[k]; p.media.push(m); sel[p.id]=visibleMedia(p).length-1; markDirty(); render(); }); }); break;
+    case 'addSlot': p.media.push({t:'slot',label:'New video'}); sel[p.id]=p.media.length-1; markDirty(); render(); break;
+    case 'upVideoSlot': (function(m){ pick('video/mp4,video/webm', function(f){ upload(f,'video',function(v,name){ m.t='video'; for(var k in v) m[k]=v[k]; if(!m.label) m.label=name; markDirty(); render(); }); }); })(list[cur]); break;
+    case 'loadVid': loadParts(p, list[cur]); break;
+    case 'linkSlot': (function(){ var v = document.getElementById('sl-'+p.id).value.trim(); if(v && !/^https?:\/\//i.test(v)) v = 'https://' + v; if(!validUrl(v)){ setStatus('Paste the full video link, for example https://youtu.be/…', 'err'); return; } var m=list[cur]; m.t='link'; m.href=v; setStatus('Link added. Press Save to keep it.', 'ok'); markDirty(); render(); })(); break;
+    case 'clearLink': (function(){ var m=list[cur]; m.t='slot'; delete m.href; markDirty(); render(); })(); break;
+    case 'addLink': (function(){ var v = document.getElementById('ln-'+p.id).value.trim(), l = document.getElementById('ll-'+p.id).value.trim(); if(!validUrl(v)){ setStatus('Paste a full link starting with https://', 'err'); return; } p.media.push({t:'link',href:v,label:l||'Video'}); sel[p.id]=p.media.length-1; markDirty(); render(); })(); break;
+    case 'fit': p.fit = p.fit==='contain' ? 'cover' : 'contain'; markDirty(); render(); break;
+    case 'mvMedia': (function(){ var d=+b.dataset.d, a=p.media.indexOf(list[cur]), c=p.media.indexOf(list[cur+d]); if(c<0) return; var t=p.media[a]; p.media[a]=p.media[c]; p.media[c]=t; sel[p.id]=cur+d; markDirty(); render(); })(); break;
+    case 'rmMedia': p.media.splice(p.media.indexOf(list[cur]),1); sel[p.id]=Math.max(0,cur-1); markDirty(); render(); break;
+    case 'mvProj': (function(){ var d=+b.dataset.d, j=i+d; if(j<0||j>=S.projects.length) return; var t=S.projects[i]; S.projects[i]=S.projects[j]; S.projects[j]=t; markDirty(); render(); var el=document.getElementById(t.id); if(el) el.scrollIntoView({block:'start'}); })(); break;
+    case 'rmProj':
+      if(b.dataset.armed){ S.projects.splice(i,1); markDirty(); render(); }
+      else { b.dataset.armed='1'; b.textContent='Click again to delete'; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent='Delete project'; } }, 3500); }
+      break;
+    case 'addProj': (function(){ var np={id:uid(),title:'New Project',cat:'Category',tool:'Software',desc:'Describe the project: what you made, the tools, and what you focused on.',tags:'Tag one, Tag two',color:'#f0b450',swatch:'Key light · gold',hudL:'Persp · Lit',hudB:'',fit:'cover',media:[]}; S.projects.push(np); markDirty(); render(); var el=document.getElementById(np.id); if(el) el.scrollIntoView({block:'start'}); })(); break;
+    case 'addContact': S.links.push({label:'Link',href:''}); markDirty(); render(); break;
+    case 'rmLink': S.links.splice(+b.dataset.j,1); markDirty(); render(); break;
+  }
+});
+document.getElementById('lb-close').addEventListener('click', function(){ document.getElementById('lb').close(); });
+document.getElementById('lb').addEventListener('click', function(e){ if(e.target === this) this.close(); });
+
+/* Saving: regenerate the whole page from state and publish it as the new version */
+var RESET = ':root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}';
+function buildDoc(){
+  var css = document.getElementById('css').textContent;
+  var main = document.getElementById('main').textContent;
+  var json = JSON.stringify(S).replace(/</g,'\\u003c');
+  var tail = document.getElementById('app').nextElementSibling; /* static chrome kept as authored */
+  return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+RESET+'</style></head><body>'+
+    '<title>'+esc(document.title)+'</title>\n'+
+    '<meta name="claude:viewport-fit-sides" content="cover">\n'+
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800;900&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">\n'+
+    '<style id="css">'+css+'</style>\n\n'+
+    '<div id="app"></div>\n<div id="bar" hidden><div class="inner" id="barInner"></div></div>\n'+
+    '<dialog id="lb" aria-label="Image viewer">\n  <img id="lb-img" src="" alt="">\n  <div class="cap mono"><span id="lb-cap"></span><button class="btn" id="lb-close" type="button">Close</button></div>\n</dialog>\n'+
+    '<input type="file" id="filePick" hidden>\n\n'+
+    '<script type="application/json" id="state">'+json+'<\/script>\n'+
+    '<script id="main">'+main+'<\/script></body></html>';
+}
+function save(){
+  if(!artifactApi || saving) return;
+  saving = true; setStatus('Saving…','');
+  try{ sessionStorage.setItem('mz-draft', JSON.stringify(S)); }catch(e){}
+  artifactApi.publish(buildDoc()).then(function(){
+    dirty = false; saving = false; setStatus('Saved', 'ok');   /* the view reloads to the new version */
+  }).catch(function(err){
+    saving = false;
+    var c = err && err.code;
+    if(c==='conflict'){ setStatus('A newer version was saved elsewhere. Reloading it; your draft can be restored.', 'err'); }
+    else if(c==='not_writer'||c==='not_granted'||c==='not_declared'||c==='capability_disabled'){ canWrite=false; editing=false; render(); }
+    else if(c==='too_large'){ setStatus('The page is too large to save. Remove some media.', 'err'); }
+    else if(c==='rate_limited'){ setStatus('Saving too often. Wait a moment, then save again.', 'err'); }
+    else { setStatus('Save failed. Try again.', 'err'); }
+  });
+}
+window.addEventListener('beforeunload', function(e){ if(dirty && !saving){ e.preventDefault(); e.returnValue=''; } });
+
+render();
+
+})();
+</script>
+
+</body></html>
